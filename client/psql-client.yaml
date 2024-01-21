@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: postgres-client
+  name: postgres-client
+  namespace: sergio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-client
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgres-client
+      annotations:
+        demo: poland
+    spec:
+      containers:
+      - image: digitalisdocker/demo-psql-client
+        imagePullPolicy: Always
+        name: postgres-client
+        resources: {}
+        env:
+        - name: DB_HOST
+          value: demo-rw.cloudnative-pg.svc.cluster.local
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: password
+

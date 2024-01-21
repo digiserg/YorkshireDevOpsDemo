@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: postgres-client
+  name: postgres-client
+  namespace: sergio
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgres-client
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgres-client
+      annotations:
+        demo: poland
+    spec:
+      containers:
+      - image: harbor.dev.vdp.vero.host/library/postgres-client:latest
+        imagePullPolicy: Always
+        name: postgres-client
+        resources: {}
+        env:
+        - name: postgres_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: username
+        - name: postgres_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: password
+        - name: postgres_CONTACT_POINTS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: hosts
